@@ -1,0 +1,46 @@
+{
+  "name": "multitranslate",
+  "type": "module",
+  "version": "0.0.7",
+  "packageManager": "pnpm@10.12.1",
+  "description": "A Flow-Launcher plugin that translates text using multiple translation services.",
+  "author": "Lu-Jiejie <lu-jiejie@outlook.com>",
+  "license": "MIT",
+  "homepage": "https://github.com/Lu-Jiejie/flow-launcher-multi-translate#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Lu-Jiejie/flow-launcher-multi-translate.git"
+  },
+  "bugs": "https://github.com/Lu-Jiejie/flow-launcher-multi-translate/issues",
+  "keywords": [],
+  "sideEffects": false,
+  "main": "./dist/index.mjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "dev": "unbuild --watch",
+    "build": "unbuild",
+    "lint": "eslint .",
+    "release": "bumpp",
+    "start": "esno src/index.ts",
+    "test": "vitest",
+    "typecheck": "tsc --noEmit",
+    "prepublishOnly": "nr build"
+  },
+  "dependencies": {
+    "axios": "^1.9.0",
+    "dotenv": "^16.5.0",
+    "flow-plugin": "^1.4.0",
+    "https-proxy-agent": "^7.0.6"
+  },
+  "devDependencies": {
+    "@antfu/eslint-config": "^4.14.1",
+    "@types/node": "^22.15.31",
+    "bumpp": "^10.1.1",
+    "eslint": "^9.28.0",
+    "esno": "^4.8.0",
+    "typescript": "^5.8.3",
+    "unbuild": "^3.5.0",
+    "vitest": "^3.2.3"
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "services": [
+    "youdao",
+    "google",
+    "bing"
+  ],
+  "sourceLanguage": "auto",
+  "targetLanguage": "en"
+}

@@ -1,0 +1,52 @@
+# .github/workflows/release.yml
+
+name: Release
+
+permissions:
+  contents: write
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20.17.0
+
+      - name: Get version
+        id: version
+        uses: notiz-dev/github-action-json-property@release
+        with:
+          path: plugin.json
+          prop_path: Version
+
+      - run: echo ${{steps.version.outputs.prop}}
+
+      - name: Install dependencies and build
+        run: |
+          npm install
+          npm run build
+          rm -rf node_modules
+          npm ci --only=production
+          zip -r MultiTranslate-${{steps.version.outputs.prop}}.zip . -x '*.git*'
+
+      - run: npx changelogithub
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+
+      - name: Upload release assets
+        uses: softprops/action-gh-release@v1
+        with:
+          files: 'MultiTranslate-${{steps.version.outputs.prop}}.zip'
+          tag_name: 'v${{steps.version.outputs.prop}}'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
