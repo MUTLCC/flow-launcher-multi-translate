@@ -35,7 +35,9 @@ jobs:
         run: |
           npm install
           npm run build
-          zip -r MultiTranslate-${{steps.version.outputs.prop}}.zip . -x '*.git*' -x '.vscode*'
+          rm -rf node_modules
+          npm ci --only=production
+          zip -r MultiTranslate-${{steps.version.outputs.prop}}.zip . -x '*.git*'
 
       - run: npx changelogithub
         env:
