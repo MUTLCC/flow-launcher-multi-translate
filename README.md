@@ -41,7 +41,7 @@ Example configuration:
   // [Required] The translation services to use.
   // The order here determines the order of the results.
   // Available services: youdao, google, bing, deeplx.
-  "services":[
+  "services": [
     "youdao",
     "google",
     "bing"
@@ -54,7 +54,7 @@ Example configuration:
   "targetLanguage": "en",
   // [Optional] The proxy URL. Default is empty.
   // Example: "http://127.0.1:7890"
-  "proxyUrl": "<Your Proxy Url>",
+  "proxyUrl": "<Your Proxy Url>"
 }
 ```
 

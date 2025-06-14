@@ -17,7 +17,7 @@ describe('translate', () => {
     expect(res).toMatchInlineSnapshot(`"每天一个苹果，医生远离你；每天一根香蕉，你远离所有人。"`)
   })
 
-  it('google', async () => {
+  it.only('google', async () => {
     const res = await googleTranslate(
       'an apple a day keeps the doctor away. an banana a day keeps you away from everyone.',
       googleLanguages.en!,
@@ -37,7 +37,7 @@ describe('translate', () => {
     expect(res).toMatchInlineSnapshot(`"一天一个苹果让医生远离。一天一根香蕉让你远离所有人。"`)
   })
 
-  it.only('youdao', async () => {
+  it('youdao', async () => {
     const res = await youdaoTranslate(
       'an apple a day keeps the doctor away. an banana a day keeps you away from everyone.',
       youdaoLanguages.en!,
