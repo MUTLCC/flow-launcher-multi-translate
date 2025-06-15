@@ -8,5 +8,5 @@
   "Language": "typescript",
   "Website": "https://github.com/Lu-Jiejie/flow-launcher-multi-translate",
   "ExecuteFileName": "./dist/index.mjs",
-  "IcoPath": "https://cdn.jsdelivr.net/gh/lu-jiejie/flow-launcher-multi-translate@main/assets/icon.png"
+  "IcoPath": "assets/icon.png"
 }

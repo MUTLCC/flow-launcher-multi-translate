@@ -1,5 +1,6 @@
+import type { Settings } from './settings'
 import axios from 'axios'
-import { config } from './config'
+// import { config } from './settings'
 
 type AxiosBaseConfig = Parameters<typeof axios.create>[0]
 
@@ -14,20 +15,20 @@ function parseProxyUrl(proxyUrl: string): AxiosBaseConfig {
   }
 }
 
+export function createAxiosInstance(settings: Settings) {
 // handle proxy configuration
-const proxyUrl = config.proxyUrl || ''
-let axiosProxyConfig: AxiosBaseConfig = {}
-if (proxyUrl) {
-  axiosProxyConfig = parseProxyUrl(proxyUrl)
+  const proxyUrl = settings.proxyUrl || ''
+  let axiosProxyConfig: AxiosBaseConfig = {}
+  if (proxyUrl) {
+    axiosProxyConfig = parseProxyUrl(proxyUrl)
+  }
+
+  const axiosBaseConfig: AxiosBaseConfig = {
+    timeout: settings.requestTimeout,
+  }
+
+  return axios.create({
+    ...axiosBaseConfig,
+    ...axiosProxyConfig,
+  })
 }
-
-const axiosBaseConfig: AxiosBaseConfig = {
-  timeout: config.requestTimeout,
-}
-
-const instance = axios.create({
-  ...axiosBaseConfig,
-  ...axiosProxyConfig,
-})
-
-export default instance

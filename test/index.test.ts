@@ -1,10 +1,10 @@
 import { describe, expect, it } from 'vitest'
-import { config } from '../src/config'
 import { parsePrompt } from '../src/index'
 import { languagesMap as bingLanguages, translate as bingTranslate } from '../src/service/bing'
 import { languagesMap as deeplxLanguages, translate as deeplxTranslate } from '../src/service/deeplx'
 import { languagesMap as googleLanguages, translate as googleTranslate } from '../src/service/google'
 import { languagesMap as youdaoLanguages, translate as youdaoTranslate } from '../src/service/youdao'
+import { config } from '../src/settings'
 
 describe('translate', () => {
   it('deeplx', async () => {

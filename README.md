@@ -32,31 +32,7 @@ tr zh>fr <text>
 
 ## Configuration
 
-All configuration is saved in `FlowLauncher\app-x.xx.x\UserData\Plugins\MultiTranslate-x.x.x\config.json`.
-
-Example configuration:
-
-```json
-{
-  // [Required] The translation services to use.
-  // The order here determines the order of the results.
-  // Available services: youdao, google, bing, deeplx.
-  "services": [
-    "youdao",
-    "google",
-    "bing"
-  ],
-  // [Optional] DeepLX Personal Url. If you want to use DeepLX, you need to set this.
-  "deeplxUrl": "<Your DeepLX Personal Url>",
-  // [Optional] The source language. Default is "auto"
-  "sourceLanguage": "auto",
-  // [Optional] The target language. Default is "en"
-  "targetLanguage": "en",
-  // [Optional] The proxy URL. Default is empty.
-  // Example: "http://127.0.1:7890"
-  "proxyUrl": "<Your Proxy Url>"
-}
-```
+See Flow-Launcher plugin settings page.
 
 ## Language Codes List
 

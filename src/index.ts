@@ -1,58 +1,72 @@
+import type { AxiosInstance } from 'axios'
 import type { LanguageCode } from './service/language'
 import { exec } from 'node:child_process'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { Flow } from 'flow-plugin'
-import { config } from './config'
+import { createAxiosInstance } from './axios'
 import { services as servicesData } from './service/index'
 import { languageCodesArr, languageNamesMap } from './service/language'
+import { parseSettings } from './settings'
 
 const _dirname = path.resolve((path.dirname(fileURLToPath(import.meta.url))), '..')
 const assetsPath = path.join(_dirname, 'assets')
-const { services } = config
 
 function main() {
   const flow = new Flow({ keepOrder: true })
+  let axiosInstance: AxiosInstance | null = null
 
-  // no services configured
-  if (!services || services.length === 0) {
-    flow.add({
-      title: 'No services configured',
-      subtitle: 'Please check your configuration.',
-      icoPath: `${assetsPath}/warning.png`,
-    })
-    return
-  }
-  // unsupported source language
-  if (languageNamesMap[config.sourceLanguage] === undefined) {
-    flow.add({
-      title: 'Unsupported source language',
-      subtitle: `The source language "${config.sourceLanguage}" is not supported.`,
-      icoPath: `${assetsPath}/warning.png`,
-    })
-    return
-  }
-  // unsupported target language
-  if (languageNamesMap[config.targetLanguage] === undefined) {
-    flow.add({
-      title: 'Unsupported target language',
-      subtitle: `The target language "${config.targetLanguage}" is not supported.`,
-      icoPath: `${assetsPath}/warning.png`,
-    })
-    return
-  }
-
-  flow.on('query', async ({ prompt }, response) => {
+  flow.on('query', async ({ prompt, settings: rawSettings }, response) => {
     // response.add({
-    //   title: `#${prompt}#`,
+    //   title: JSON.stringify(rawSettings, null, 2),
     // })
     // return
+
+    const settings = parseSettings(rawSettings as any)
+
+    if (axiosInstance === null) {
+      axiosInstance = createAxiosInstance(settings)
+    }
+
+    // response.add({
+    //   title: JSON.stringify(settings, null, 2),
+    // })
+    // return
+
+    // no services configured
+    if (!settings.services || settings.services.length === 0) {
+      flow.add({
+        title: 'No services configured',
+        subtitle: 'Please check your configuration.',
+        icoPath: `${assetsPath}/warning.png`,
+      })
+      return
+    }
+    // unsupported source language
+    if (languageNamesMap[settings.sourceLanguageCode] === undefined) {
+      flow.add({
+        title: 'Unsupported source language',
+        subtitle: `The source language code "${settings.sourceLanguageCode}" is not supported.`,
+        icoPath: `${assetsPath}/warning.png`,
+      })
+      return
+    }
+    // unsupported target language
+    if (languageNamesMap[settings.targetLanguageCode] === undefined) {
+      flow.add({
+        title: 'Unsupported target language',
+        subtitle: `The target language code "${settings.targetLanguageCode}" is not supported.`,
+        icoPath: `${assetsPath}/warning.png`,
+      })
+      return
+    }
+
     // parse prompt to prefix and text
-    const { sourceLanguage, targetLanguage, text } = parsePrompt(prompt, config.sourceLanguage, config.targetLanguage)
+    const { sourceLanguageCode, targetLanguageCode, text } = parsePrompt(prompt, settings.sourceLanguageCode, settings.targetLanguageCode)
 
     if (!text || text.trim().length === 0) {
       response.add({
-        title: `${languageNamesMap[sourceLanguage].en} → ${languageNamesMap[targetLanguage].en}`,
+        title: `${languageNamesMap[sourceLanguageCode].en} → ${languageNamesMap[targetLanguageCode].en}`,
         icoPath: `${assetsPath}/info.png`,
       })
       return
@@ -63,21 +77,22 @@ function main() {
     // })
     // return
 
-    const translatePromises = services.map(async (name) => {
+    const translatePromises = settings.services.map(async (name) => {
       const service = servicesData[name]
       if (!service)
         return null
-      if (service.languagesMap[sourceLanguage] === undefined) {
+      if (service.languagesMap[sourceLanguageCode] === undefined) {
         return { result: 'Unsupported source language', name }
       }
-      if (service.languagesMap[targetLanguage] === undefined) {
+      if (service.languagesMap[targetLanguageCode] === undefined) {
         return { result: 'Unsupported target language', name }
       }
       const result = await service.translate(
         text,
-        service.languagesMap[sourceLanguage],
-        service.languagesMap[targetLanguage],
-        config,
+        service.languagesMap[sourceLanguageCode],
+        service.languagesMap[targetLanguageCode],
+        axiosInstance!,
+        settings,
       )
       return { result, name }
     })
@@ -88,7 +103,7 @@ function main() {
       .map(({ name, result }) => {
         return {
           title: result,
-          subtitle: `${languageNamesMap[sourceLanguage].en} → ${languageNamesMap[targetLanguage].en}  [${name}]`,
+          subtitle: `${languageNamesMap[sourceLanguageCode].en} → ${languageNamesMap[targetLanguageCode].en}  [${name}]`,
           icoPath: `${assetsPath}/service_icon/${name}.png`,
           jsonRPCAction: Flow.Actions.custom('copy', [result]),
         }
@@ -104,11 +119,11 @@ function main() {
 
 export function parsePrompt(
   prompt: string,
-  oldSourceLanguage: LanguageCode,
-  oldTargetLanguage: LanguageCode,
+  oldSourceLanguageCode: LanguageCode,
+  oldTargetLanguageCode: LanguageCode,
 ): {
-    sourceLanguage: LanguageCode
-    targetLanguage: LanguageCode
+    sourceLanguageCode: LanguageCode
+    targetLanguageCode: LanguageCode
     text: string
   } {
   prompt = prompt.trimStart()
@@ -117,8 +132,8 @@ export function parsePrompt(
   const spaceIndex = prompt.indexOf(' ')
   if (spaceIndex === -1 || spaceIndex > 15) {
     return {
-      sourceLanguage: oldSourceLanguage,
-      targetLanguage: oldTargetLanguage,
+      sourceLanguageCode: oldSourceLanguageCode,
+      targetLanguageCode: oldTargetLanguageCode,
       text: prompt,
     }
   }
@@ -133,8 +148,8 @@ export function parsePrompt(
     const [_, source, target] = match1
     if (languageCodesArr.includes(source as any) && languageCodesArr.includes(target as any)) {
       return {
-        sourceLanguage: source as LanguageCode,
-        targetLanguage: target as LanguageCode,
+        sourceLanguageCode: source as LanguageCode,
+        targetLanguageCode: target as LanguageCode,
         text: rest,
       }
     }
@@ -147,8 +162,8 @@ export function parsePrompt(
     // console.log(languageCodesArr.includes(source))
     if (languageCodesArr.includes(source as any)) {
       return {
-        sourceLanguage: source as LanguageCode,
-        targetLanguage: oldTargetLanguage,
+        sourceLanguageCode: source as LanguageCode,
+        targetLanguageCode: oldTargetLanguageCode,
         text: rest,
       }
     }
@@ -160,8 +175,8 @@ export function parsePrompt(
     const [_, target] = match3
     if (languageCodesArr.includes(target as any)) {
       return {
-        sourceLanguage: oldSourceLanguage,
-        targetLanguage: target as LanguageCode,
+        sourceLanguageCode: oldSourceLanguageCode,
+        targetLanguageCode: target as LanguageCode,
         text: rest,
       }
     }
@@ -169,8 +184,8 @@ export function parsePrompt(
 
   // Default case
   return {
-    sourceLanguage: oldSourceLanguage,
-    targetLanguage: oldTargetLanguage,
+    sourceLanguageCode: oldSourceLanguageCode,
+    targetLanguageCode: oldTargetLanguageCode,
     text: prompt,
   }
 }

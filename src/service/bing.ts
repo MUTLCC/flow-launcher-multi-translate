@@ -1,14 +1,13 @@
-import type { Options } from '../config'
+import type { Settings } from '../settings'
 import type { LanguagesMap } from './language'
-import { isAxiosError } from 'axios'
-import axios from '../axios'
+import { type AxiosInstance, isAxiosError } from 'axios'
 
 const tokenApi = 'https://edge.microsoft.com/translate/auth'
 const translateApi = 'https://api-edge.cognitive.microsofttranslator.com/translate'
 
-export async function translate(text: string, from: string, to: string, _options: Options): Promise<string> {
+export async function translate(text: string, from: string, to: string, axiosInstance: AxiosInstance, _options: Settings): Promise<string> {
   try {
-    const tokenResponse = await axios.get(
+    const tokenResponse = await axiosInstance.get(
       tokenApi,
       {
         headers: {
@@ -20,7 +19,7 @@ export async function translate(text: string, from: string, to: string, _options
 
     const token = tokenResponse.data
 
-    const translateResponse = await axios.post(
+    const translateResponse = await axiosInstance.post(
       translateApi,
       [
         {

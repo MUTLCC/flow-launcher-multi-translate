@@ -1,14 +1,13 @@
 import type { AxiosInstance } from 'axios'
 import type { Buffer } from 'node:buffer'
-import type { Options } from '../config'
+import type { Settings } from '../settings'
 import type { LanguagesMap } from './language'
 import * as crypto from 'node:crypto'
 import { isAxiosError } from 'axios'
-import axios from '../axios'
 import { getRandomInt } from '../utils'
 
-export async function translate(text: string, from: string, to: string, _options: Options): Promise<string> {
-  const client = createHttpClient()
+export async function translate(text: string, from: string, to: string, axiosInstance: AxiosInstance, _options: Settings): Promise<string> {
+  const client = createHttpClient(axiosInstance)
   try {
     // get secret key
     const secretKey = await fetchSecretKey(client)
@@ -51,8 +50,8 @@ export async function translate(text: string, from: string, to: string, _options
   }
 }
 
-function createHttpClient(): AxiosInstance {
-  const client = axios.create({
+function createHttpClient(axiosInstance: AxiosInstance): AxiosInstance {
+  const client = axiosInstance.create({
     headers: {
       'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3 Edg/113.0.1774.42',
       'Referer': 'https://fanyi.youdao.com/',

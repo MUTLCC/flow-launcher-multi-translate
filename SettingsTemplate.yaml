@@ -1,0 +1,65 @@
+# yaml-language-server: $schema=https://www.flowlauncher.com/schemas/settings-template.schema.json
+body:
+  - type: textarea
+    attributes:
+      name: services
+      label: Translate Services
+      description: >
+        The services to use for translation, separated by new lines.
+
+        Available free services: Youdao, Google, Bing, Deeplx (DeepLX requires your own URL).
+      defaultValue: "youdao\ngoogle\nbing"
+
+  - type: input
+    attributes:
+      name: deeplxUrl
+      label: DeepLX URL
+      description: >
+        The URL for DeepLX translation service.
+
+        Only required if you are using DeepLX as a translation service.
+      defaultValue: ''
+
+  - type: input
+    attributes:
+      name: proxyUrl
+      label: Proxy URL
+      description: >
+        The URL for the proxy server to use for translation requests.
+
+        If not set, the plugin will not use a proxy.
+
+        Example: http://127.0.0.1:7890
+      defaultValue: ''
+
+  - type: input
+    attributes:
+      name: requestTimeout
+      label: Request Timeout
+      description: >
+        The timeout for translation requests in milliseconds.
+
+        If the request takes longer than this time, it will be aborted.
+      defaultValue: '3000'
+
+  - type: input
+    attributes:
+      name: sourceLanguageCode
+      label: Source Language Code
+      description: >
+        The language to translate from.
+
+        If set to 'auto', the plugin will automatically detect the source language.
+      defaultValue: auto
+
+  - type: input
+    attributes:
+      name: targetLanguageCode
+      label: Target Language Code
+      description: >
+        The language to translate to.
+
+        Different services may support different languages, It is better to set the common language.
+
+        Refer to the plugin repository homepage for the language code code.
+      defaultValue: en
