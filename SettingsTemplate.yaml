@@ -5,9 +5,11 @@ body:
       name: services
       label: Translate Services
       description: >
-        The services to use for translation, separated by new lines.
+        Translation services, one per line.
 
-        Available free services: Youdao, Google, Bing, Deeplx (DeepLX requires your own URL).
+        Free services: Youdao, Google, Bing, Deeplx
+
+        (DeepLX requires self-hosted URL)
       defaultValue: "youdao\ngoogle\nbing"
 
   - type: input
@@ -15,9 +17,9 @@ body:
       name: deeplxUrl
       label: DeepLX URL
       description: >
-        The URL for DeepLX translation service.
+        DeepLX service URL.
 
-        Only required if you are using DeepLX as a translation service.
+        Required only when using DeepLX.
       defaultValue: ''
 
   - type: input
@@ -25,9 +27,7 @@ body:
       name: proxyUrl
       label: Proxy URL
       description: >
-        The URL for the proxy server to use for translation requests.
-
-        If not set, the plugin will not use a proxy.
+        Proxy server URL for requests.
 
         Example: http://127.0.0.1:7890
       defaultValue: ''
@@ -37,9 +37,9 @@ body:
       name: requestTimeout
       label: Request Timeout
       description: >
-        The timeout for translation requests in milliseconds.
+        Request timeout in milliseconds.
 
-        If the request takes longer than this time, it will be aborted.
+        Requests exceeding this time will be aborted.
       defaultValue: '3000'
 
   - type: input
@@ -47,9 +47,9 @@ body:
       name: sourceLanguageCode
       label: Source Language Code
       description: >
-        The language to translate from.
+        Source language code.
 
-        If set to 'auto', the plugin will automatically detect the source language.
+        Use 'auto' for automatic detection.
       defaultValue: auto
 
   - type: input
@@ -57,9 +57,7 @@ body:
       name: targetLanguageCode
       label: Target Language Code
       description: >
-        The language to translate to.
+        Target language code.
 
-        Different services may support different languages, It is better to set the common language.
-
-        Refer to the plugin repository homepage for the language code code.
+        See plugin repository for language codes.
       defaultValue: en
