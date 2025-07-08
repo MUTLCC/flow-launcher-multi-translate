@@ -24,7 +24,7 @@ tr >fr <text>
 tr fr <text>
 
 # Specify a source language
-tr zh <text>
+tr zh> <text>
 
 # Both source and target languages
 tr zh>fr <text>

@@ -1,8 +1,8 @@
 import type { AxiosInstance } from 'axios'
 import type { LanguageCode } from './service/language'
-import { exec } from 'node:child_process'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
+import clipboard from 'clipboardy'
 import { Flow } from 'flow-plugin'
 import { createAxiosInstance } from './axios'
 import { services as servicesData } from './service/index'
@@ -113,7 +113,8 @@ function main() {
   })
 
   flow.on('copy', ({ parameters: [result] }) => {
-    exec(`echo ${result} | clip`)
+    // exec(`echo ${result} | clip`)
+    clipboard.writeSync(result as string)
   })
 }
 
