@@ -5,6 +5,7 @@ import { fileURLToPath } from 'node:url'
 import clipboard from 'clipboardy'
 import { Flow } from 'flow-plugin'
 import { createAxiosInstance } from './axios'
+import { logger } from './logger'
 import { services as servicesData } from './service/index'
 import { languageCodesArr, languageNamesMap } from './service/language'
 import { parseSettings } from './settings'
@@ -23,15 +24,9 @@ function main() {
     // return
 
     const settings = parseSettings(rawSettings as any)
-
     if (axiosInstance === null) {
       axiosInstance = createAxiosInstance(settings)
     }
-
-    // response.add({
-    //   title: JSON.stringify(settings, null, 2),
-    // })
-    // return
 
     // no services configured
     if (!settings.services || settings.services.length === 0) {
@@ -61,6 +56,37 @@ function main() {
       return
     }
 
+    // no prompt and show quick select: language pairs
+    if (
+      settings.languagePairs
+      && settings.languagePairs.length > 0
+      && prompt.trim().length === 0
+    ) {
+      // filter illegal language pairs
+      const validPairs = settings.languagePairs.filter((pair) => {
+        const [source, target] = pair.split('>').map(i => i.trim())
+        return (
+          languageCodesArr.includes(source as LanguageCode)
+          && languageCodesArr.includes(target as LanguageCode)
+        )
+      })
+
+      response.add(
+        ...validPairs.map((pair) => {
+          const [source, target] = pair.split('>').map(i => i.trim())
+          const sourceName = languageNamesMap[source as LanguageCode]?.en || source
+          const targetName = languageNamesMap[target as LanguageCode]?.en || target
+          return {
+            title: `${sourceName} → ${targetName}`,
+            subtitle: `Quick select: ${pair}`,
+            icoPath: `${assetsPath}/icon.png`,
+            jsonRPCAction: Flow.Actions.changeQuery(`tr ${pair} `, { requery: true }),
+          }
+        }),
+      )
+      return
+    }
+
     // parse prompt to prefix and text
     const { sourceLanguageCode, targetLanguageCode, text } = parsePrompt(prompt, settings.sourceLanguageCode, settings.targetLanguageCode)
 
@@ -71,11 +97,6 @@ function main() {
       })
       return
     }
-
-    // response.add({
-    //   title: `${sourceLanguage}  ${targetLanguage}  #${text}#`,
-    // })
-    // return
 
     const translatePromises = settings.services.map(async (name) => {
       const service = servicesData[name]

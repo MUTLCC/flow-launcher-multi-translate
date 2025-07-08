@@ -112,5 +112,4 @@ class Logger {
 
 const logger = new Logger()
 
-// 导出Logger类，以便创建自定义实例
 export { Logger, logger }

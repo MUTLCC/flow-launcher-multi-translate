@@ -7,6 +7,7 @@ export interface Settings {
   deeplxUrl: string
   sourceLanguageCode: LanguageCode
   targetLanguageCode: LanguageCode
+  languagePairs: string[]
 }
 
 export function parseSettings(settings: Record<string, string>): Settings {
@@ -18,6 +19,7 @@ export function parseSettings(settings: Record<string, string>): Settings {
   const deeplxUrl = settings.deeplxUrl || ''
   const sourceLanguageCode = settings.sourceLanguageCode as LanguageCode || 'auto'
   const targetLanguageCode = settings.targetLanguageCode as LanguageCode || 'zh'
+  const languagePairs = (settings.languagePairs || '').split('\n').map(i => i.trim()).filter(i => i)
 
   return {
     services,
@@ -26,6 +28,7 @@ export function parseSettings(settings: Record<string, string>): Settings {
     deeplxUrl,
     sourceLanguageCode,
     targetLanguageCode,
+    languagePairs,
   }
 }
 

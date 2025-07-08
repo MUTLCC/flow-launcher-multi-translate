@@ -61,3 +61,15 @@ body:
 
         See plugin repository for language codes.
       defaultValue: en
+
+  - type: textarea
+    attributes:
+      name: languagePairs
+      label: Language Pairs
+      description: >
+        Pre-configured language pairs, one per line.
+
+        These will be shown as quick options.
+
+        Example: en>zh
+      defaultValue: ''
