@@ -30,6 +30,8 @@ tr zh> <text>
 tr zh>fr <text>
 ```
 
+Just wait for the translation results, and select one of them to copy into the clipboard.
+
 ## Configuration
 
 See Flow-Launcher plugin settings page.

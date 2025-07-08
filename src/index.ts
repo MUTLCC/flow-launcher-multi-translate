@@ -80,7 +80,7 @@ function main() {
             title: `${sourceName} → ${targetName}`,
             subtitle: `Quick select: ${source} → ${target}`,
             icoPath: `${assetsPath}/info.png`,
-            jsonRPCAction: Flow.Actions.changeQuery(`tr ${pair} `, { requery: true }),
+            jsonRPCAction: Flow.Actions.changeQuery(`${settings.triggerKeyword} ${pair} `, { requery: true }),
           }
         }),
       )

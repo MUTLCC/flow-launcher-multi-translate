@@ -8,6 +8,7 @@ export interface Settings {
   sourceLanguageCode: LanguageCode
   targetLanguageCode: LanguageCode
   languagePairs: string[]
+  triggerKeyword: string
 }
 
 export function parseSettings(settings: Record<string, string>): Settings {
@@ -20,6 +21,7 @@ export function parseSettings(settings: Record<string, string>): Settings {
   const sourceLanguageCode = settings.sourceLanguageCode as LanguageCode || 'auto'
   const targetLanguageCode = settings.targetLanguageCode as LanguageCode || 'zh'
   const languagePairs = (settings.languagePairs || '').split('\n').map(i => i.trim()).filter(i => i)
+  const triggerKeyword = settings.triggerKeyword || 'tr'
 
   return {
     services,
@@ -29,6 +31,7 @@ export function parseSettings(settings: Record<string, string>): Settings {
     sourceLanguageCode,
     targetLanguageCode,
     languagePairs,
+    triggerKeyword,
   }
 }
 

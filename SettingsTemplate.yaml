@@ -73,3 +73,13 @@ body:
 
         Example: en>zh
       defaultValue: ''
+
+  - type: input
+    attributes:
+      name: triggerKeyword
+      label: Trigger Keyword
+      description: >
+        Keyword you set to trigger this plugin.
+
+        Required when you need language pairs.
+      defaultValue: tr
