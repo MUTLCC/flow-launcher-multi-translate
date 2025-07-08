@@ -18,11 +18,6 @@ function main() {
   let axiosInstance: AxiosInstance | null = null
 
   flow.on('query', async ({ prompt, settings: rawSettings }, response) => {
-    // response.add({
-    //   title: JSON.stringify(rawSettings, null, 2),
-    // })
-    // return
-
     const settings = parseSettings(rawSettings as any)
     if (axiosInstance === null) {
       axiosInstance = createAxiosInstance(settings)
@@ -72,14 +67,19 @@ function main() {
       })
 
       response.add(
+        {
+          title: `${languageNamesMap[settings.sourceLanguageCode].en} → ${languageNamesMap[settings.targetLanguageCode].en}`,
+          subtitle: `Default selected: ${settings.sourceLanguageCode} → ${settings.targetLanguageCode}`,
+          icoPath: `${assetsPath}/info.png`,
+        },
         ...validPairs.map((pair) => {
           const [source, target] = pair.split('>').map(i => i.trim())
           const sourceName = languageNamesMap[source as LanguageCode]?.en || source
           const targetName = languageNamesMap[target as LanguageCode]?.en || target
           return {
             title: `${sourceName} → ${targetName}`,
-            subtitle: `Quick select: ${pair}`,
-            icoPath: `${assetsPath}/icon.png`,
+            subtitle: `Quick select: ${source} → ${target}`,
+            icoPath: `${assetsPath}/info.png`,
             jsonRPCAction: Flow.Actions.changeQuery(`tr ${pair} `, { requery: true }),
           }
         }),
@@ -89,10 +89,10 @@ function main() {
 
     // parse prompt to prefix and text
     const { sourceLanguageCode, targetLanguageCode, text } = parsePrompt(prompt, settings.sourceLanguageCode, settings.targetLanguageCode)
-
     if (!text || text.trim().length === 0) {
       response.add({
         title: `${languageNamesMap[sourceLanguageCode].en} → ${languageNamesMap[targetLanguageCode].en}`,
+        subtitle: `Default selected: ${sourceLanguageCode} → ${targetLanguageCode}`,
         icoPath: `${assetsPath}/info.png`,
       })
       return
@@ -148,11 +148,11 @@ export function parsePrompt(
     targetLanguageCode: LanguageCode
     text: string
   } {
-  prompt = prompt.trimStart()
-
   // Check if there is prefix
   const spaceIndex = prompt.indexOf(' ')
-  if (spaceIndex === -1 || spaceIndex > 15) {
+
+  // prefix too long seems like a text
+  if (spaceIndex > 15) {
     return {
       sourceLanguageCode: oldSourceLanguageCode,
       targetLanguageCode: oldTargetLanguageCode,
@@ -160,9 +160,20 @@ export function parsePrompt(
     }
   }
 
-  const prefix = prompt.substring(0, spaceIndex)
-  const rest = prompt.substring(spaceIndex + 1).trim()
-  // console.log(`Prefix: "${prefix}", Rest: "${rest}"`)
+  let prefix = ''
+  let rest = ''
+
+  // there is no space
+  if (spaceIndex === -1) {
+    prefix = prompt
+    rest = ''
+  }
+  else {
+    prefix = prompt.substring(0, spaceIndex)
+    rest = prompt.substring(spaceIndex + 1).trim()
+  }
+
+  // logger.info(`Prefix: "${prefix}", Rest: "${rest}"`)
 
   // Part 1: A>B
   const match1 = prefix.match(/^([a-z_]+)>([a-z_]+)$/)
