@@ -41,5 +41,9 @@
   "yaml.schemas": {
     "file:///c%3A/Users/Kelvin/.vscode/extensions/docsmsft.docs-yaml-1.0.5/dist/toc.schema.json": "/toc\\.yml/i",
     "https://www.flowlauncher.com/schemas/settings-template.schema.json": "file:///d%3A/CODE/mine/flow-launcher-multi-translate/SettingsTemplate.yaml"
+  },
+  "catppuccin-icons.associations.folders": {
+    "logs": "folder_docs",
+    "rest": "folder_public"
   }
 }
