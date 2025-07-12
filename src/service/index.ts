@@ -4,6 +4,7 @@ import * as bing from './bing'
 import * as deepl from './deepl'
 import * as deeplx from './deeplx'
 import * as google from './google'
+import * as transmart from './transmart'
 import * as volcengine from './volcengine'
 import * as youdao from './youdao'
 
@@ -12,6 +13,7 @@ const serviceModules = {
   deepl,
   deeplx,
   google,
+  transmart,
   volcengine,
   youdao,
 }
