@@ -1,5 +1,6 @@
 import type { AxiosInstance } from 'axios'
 import type { Settings } from '../settings'
+import * as baidu from './baidu'
 import * as bing from './bing'
 import * as caiyun from './caiyun'
 import * as deepl from './deepl'
@@ -11,6 +12,7 @@ import * as volcengine from './volcengine'
 import * as youdao from './youdao'
 
 const serviceModules = {
+  baidu,
   bing,
   caiyun,
   deepl,
