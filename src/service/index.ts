@@ -24,6 +24,19 @@ const serviceModules = {
   youdao,
 }
 
+export const serviceNamesMap: Record<string, { en: string, zh: string }> = {
+  baidu: { en: 'Baidu Translate', zh: '百度翻译' },
+  bing: { en: 'Microsoft Translator', zh: '微软翻译' },
+  caiyun: { en: 'Caiyun Translate', zh: '彩云小译' },
+  deepl: { en: 'DeepL', zh: 'DeepL' },
+  deeplx: { en: 'DeepLX', zh: 'DeepLX' },
+  google: { en: 'Google Translate', zh: '谷歌翻译' },
+  tencent: { en: 'Tencent Translate', zh: '腾讯翻译君' },
+  transmart: { en: 'Transmart', zh: '腾讯交互翻译' },
+  volcengine: { en: 'Volcengine Translate', zh: '火山翻译' },
+  youdao: { en: 'Youdao Translate', zh: '有道翻译' },
+}
+
 const services: Record<string, {
   translate: (text: string, from: string, to: string, axiosInstance: AxiosInstance, _options: Settings) => Promise<string>
   languagesMap: Record<string, string>

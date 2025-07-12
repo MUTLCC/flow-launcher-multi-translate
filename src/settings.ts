@@ -1,4 +1,5 @@
 import type { LanguageCode } from './service/language'
+import { logger } from './logger'
 
 export interface Settings {
   services: string[]
@@ -9,10 +10,11 @@ export interface Settings {
   targetLanguageCode: LanguageCode
   languagePairs: string[]
   triggerKeyword: string
+  interfaceLanguage: 'en' | 'zh'
 }
 
 export function parseSettings(settings: Record<string, string>): Settings {
-  const services = (settings.services as string).split('\n').map(i => i.trim()).filter(i => i)
+  const services = (settings.services as string).split('\n').map(i => i.trim().toLowerCase()).filter(i => i)
   let requestTimeout = Number.parseInt(settings.requestTimeout, 10)
   if (Number.isNaN(requestTimeout))
     requestTimeout = 3000
@@ -22,7 +24,9 @@ export function parseSettings(settings: Record<string, string>): Settings {
   const targetLanguageCode = settings.targetLanguageCode as LanguageCode || 'zh'
   const languagePairs = (settings.languagePairs || '').split('\n').map(i => i.trim()).filter(i => i)
   const triggerKeyword = settings.triggerKeyword || 'tr'
+  const interfaceLanguage = settings.interfaceLanguage === 'English' ? 'en' : 'zh'
 
+  logger.info(settings)
   return {
     services,
     requestTimeout,
@@ -32,6 +36,7 @@ export function parseSettings(settings: Record<string, string>): Settings {
     targetLanguageCode,
     languagePairs,
     triggerKeyword,
+    interfaceLanguage,
   }
 }
 

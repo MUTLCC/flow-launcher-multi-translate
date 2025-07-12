@@ -6,6 +6,7 @@ import clipboard from 'clipboardy'
 import { Flow } from 'flow-plugin'
 import { createAxiosInstance } from './axios'
 import { logger } from './logger'
+import { serviceNamesMap } from './service'
 import { services as servicesData } from './service/index'
 import { languageCodesArr, languageNamesMap } from './service/language'
 import { parseSettings } from './settings'
@@ -13,12 +14,25 @@ import { parseSettings } from './settings'
 const _dirname = path.resolve((path.dirname(fileURLToPath(import.meta.url))), '..')
 const assetsPath = path.join(_dirname, 'assets')
 
+const messagesMap: Record<string, { en: string, zh: string }> = {
+  unsupportedSourceLanguage: { en: 'Unsupported source language', zh: '不支持的源语言' },
+  unsupportedSourceLanguageSubtitle: { en: 'Please check your configuration.', zh: '请检查您的配置。' },
+  unsupportedTargetLanguage: { en: 'Unsupported target language', zh: '不支持的目标语言' },
+  unsupportedTargetLanguageSubtitle: { en: 'Please check your configuration.', zh: '请检查您的配置。' },
+  noServicesConfigured: { en: 'No services configured', zh: '未配置翻译服务' },
+  noServicesConfiguredSubtitle: { en: 'Please check your configuration.', zh: '请检查您的配置。' },
+  defaultSelected: { en: 'Default selected: ', zh: '默认选择: ' },
+  quickSelect: { en: 'Quick select: ', zh: '快速选择: ' },
+}
+
 function main() {
   const flow = new Flow({ keepOrder: true })
   let axiosInstance: AxiosInstance | null = null
 
   flow.on('query', async ({ prompt, settings: rawSettings }, response) => {
     const settings = parseSettings(rawSettings as any)
+    const { interfaceLanguage } = settings
+
     if (axiosInstance === null) {
       axiosInstance = createAxiosInstance(settings)
     }
@@ -26,8 +40,8 @@ function main() {
     // no services configured
     if (!settings.services || settings.services.length === 0) {
       flow.add({
-        title: 'No services configured',
-        subtitle: 'Please check your configuration.',
+        title: messagesMap.noServicesConfigured[interfaceLanguage],
+        subtitle: messagesMap.noServicesConfiguredSubtitle[interfaceLanguage],
         icoPath: `${assetsPath}/warning.png`,
       })
       return
@@ -35,8 +49,8 @@ function main() {
     // unsupported source language
     if (languageNamesMap[settings.sourceLanguageCode] === undefined) {
       flow.add({
-        title: 'Unsupported source language',
-        subtitle: `The source language code "${settings.sourceLanguageCode}" is not supported.`,
+        title: `${messagesMap.unsupportedSourceLanguage[interfaceLanguage]} ${settings.sourceLanguageCode}`,
+        subtitle: messagesMap.unsupportedSourceLanguageSubtitle[interfaceLanguage],
         icoPath: `${assetsPath}/warning.png`,
       })
       return
@@ -44,8 +58,8 @@ function main() {
     // unsupported target language
     if (languageNamesMap[settings.targetLanguageCode] === undefined) {
       flow.add({
-        title: 'Unsupported target language',
-        subtitle: `The target language code "${settings.targetLanguageCode}" is not supported.`,
+        title: `${messagesMap.unsupportedTargetLanguage[interfaceLanguage]} ${settings.targetLanguageCode}`,
+        subtitle: messagesMap.unsupportedTargetLanguageSubtitle[interfaceLanguage],
         icoPath: `${assetsPath}/warning.png`,
       })
       return
@@ -68,17 +82,17 @@ function main() {
 
       response.add(
         {
-          title: `${languageNamesMap[settings.sourceLanguageCode].en} → ${languageNamesMap[settings.targetLanguageCode].en}`,
-          subtitle: `Default selected: ${settings.sourceLanguageCode} → ${settings.targetLanguageCode}`,
+          title: `${languageNamesMap[settings.sourceLanguageCode][interfaceLanguage]} → ${languageNamesMap[settings.targetLanguageCode][interfaceLanguage]}`,
+          subtitle: `${messagesMap.defaultSelected[interfaceLanguage]} ${settings.sourceLanguageCode} → ${settings.targetLanguageCode}`,
           icoPath: `${assetsPath}/info.png`,
         },
         ...validPairs.map((pair) => {
           const [source, target] = pair.split('>').map(i => i.trim())
-          const sourceName = languageNamesMap[source as LanguageCode]?.en || source
-          const targetName = languageNamesMap[target as LanguageCode]?.en || target
+          const sourceName = languageNamesMap[source as LanguageCode][interfaceLanguage] || source
+          const targetName = languageNamesMap[target as LanguageCode][interfaceLanguage] || target
           return {
             title: `${sourceName} → ${targetName}`,
-            subtitle: `Quick select: ${source} → ${target}`,
+            subtitle: `${messagesMap.quickSelect[interfaceLanguage]} ${source} → ${target}`,
             icoPath: `${assetsPath}/info.png`,
             jsonRPCAction: Flow.Actions.changeQuery(`${settings.triggerKeyword} ${pair} `, { requery: true }),
           }
@@ -91,8 +105,8 @@ function main() {
     const { sourceLanguageCode, targetLanguageCode, text } = parsePrompt(prompt, settings.sourceLanguageCode, settings.targetLanguageCode)
     if (!text || text.trim().length === 0) {
       response.add({
-        title: `${languageNamesMap[sourceLanguageCode].en} → ${languageNamesMap[targetLanguageCode].en}`,
-        subtitle: `Default selected: ${sourceLanguageCode} → ${targetLanguageCode}`,
+        title: `${languageNamesMap[sourceLanguageCode][interfaceLanguage]} → ${languageNamesMap[targetLanguageCode][interfaceLanguage]}`,
+        subtitle: `${messagesMap.defaultSelected[interfaceLanguage]} ${sourceLanguageCode} → ${targetLanguageCode}`,
         icoPath: `${assetsPath}/info.png`,
       })
       return
@@ -103,10 +117,10 @@ function main() {
       if (!service)
         return null
       if (service.languagesMap[sourceLanguageCode] === undefined) {
-        return { result: 'Unsupported source language', name }
+        return { result: messagesMap.unsupportedSourceLanguage[interfaceLanguage], name }
       }
       if (service.languagesMap[targetLanguageCode] === undefined) {
-        return { result: 'Unsupported target language', name }
+        return { result: messagesMap.unsupportedTargetLanguage[interfaceLanguage], name }
       }
       const result = await service.translate(
         text,
@@ -124,7 +138,7 @@ function main() {
       .map(({ name, result }) => {
         return {
           title: result,
-          subtitle: `${languageNamesMap[sourceLanguageCode].en} → ${languageNamesMap[targetLanguageCode].en}  [${name}]`,
+          subtitle: `${languageNamesMap[sourceLanguageCode][interfaceLanguage]} → ${languageNamesMap[targetLanguageCode][interfaceLanguage]}  [${serviceNamesMap[name][interfaceLanguage]}]`,
           icoPath: `${assetsPath}/service_icon/${name}.png`,
           jsonRPCAction: Flow.Actions.custom('copy', [result]),
         }

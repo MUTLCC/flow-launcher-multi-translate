@@ -1,5 +1,16 @@
 # yaml-language-server: $schema=https://www.flowlauncher.com/schemas/settings-template.schema.json
 body:
+  - type: dropdown
+    attributes:
+      name: interfaceLanguage
+      label: Interface Language
+      description: >
+        Language for the plugin interface.
+      options:
+        - English
+        - 简体中文
+      defaultValue: English
+
   - type: textarea
     attributes:
       name: services
@@ -7,7 +18,11 @@ body:
       description: >
         Translation services, one per line.
 
-        Supported services: Youdao, Google, Bing, Deepl, DeepLX.
+        Supported services:
+
+        Youdao, Google, Baidu, Bing, DeepL, DeepLX
+
+        Tencent, Transmart, Caiyun, Volcegine
 
         (DeepLX requires self-hosted URL)
       defaultValue: "youdao\ndeepl\ngoogle\nbing"

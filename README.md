@@ -13,10 +13,18 @@ A Flow-Launcher plugin that translates text using multiple translation services.
 ## Supports
 
 ### Without configuration
-- Youdao
-- Google
-- Bing
-- DeepL
+- [Youdao](https://fanyi.youdao.com/)
+- [Google](https://translate.google.com/)
+- [Baidu](https://fanyi.baidu.com/)
+- [Bing](https://www.bing.com/translator)
+- [DeepL](https://www.deepl.com/translator)
+- [Tencent](https://fanyi.qq.com/)
+- [Transmart](https://transmart.qq.com)
+- [Caiyun](https://fanyi.caiyunapp.com/)
+- [Volcengine](https://translate.volcengine.com/)
+
+> [!IMPORTANT]
+> The above services are unofficial. Please use with discretion.
 
 ### Requires configuration
 - DeepLX (need personal URL)
@@ -49,7 +57,8 @@ See Flow-Launcher plugin settings page.
 
 ## Language Codes List
 
-I can only ensure the common languages are supported.
++ I can only ensure the common languages are supported.
++ Each service may support different languages.
 
 ```typescript
 export const languageCodesArr = [
