@@ -1,6 +1,7 @@
 import type { AxiosInstance } from 'axios'
 import type { Settings } from '../settings'
 import * as bing from './bing'
+import * as caiyun from './caiyun'
 import * as deepl from './deepl'
 import * as deeplx from './deeplx'
 import * as google from './google'
@@ -10,6 +11,7 @@ import * as youdao from './youdao'
 
 const serviceModules = {
   bing,
+  caiyun,
   deepl,
   deeplx,
   google,
