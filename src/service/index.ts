@@ -5,6 +5,7 @@ import * as caiyun from './caiyun'
 import * as deepl from './deepl'
 import * as deeplx from './deeplx'
 import * as google from './google'
+import * as tencent from './tencent'
 import * as transmart from './transmart'
 import * as volcengine from './volcengine'
 import * as youdao from './youdao'
@@ -15,6 +16,7 @@ const serviceModules = {
   deepl,
   deeplx,
   google,
+  tencent,
   transmart,
   volcengine,
   youdao,
