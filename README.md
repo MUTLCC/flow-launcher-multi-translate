@@ -10,6 +10,17 @@ MultiTranslate
 A Flow-Launcher plugin that translates text using multiple translation services.
 </p>
 
+## Supports
+
+### Without configuration
+- Youdao
+- Google
+- Bing
+- DeepL
+
+### Requires configuration
+- DeepLX (need personal URL)
+
 ## Features
 
 ![example1](./assets/example1.png)
@@ -88,3 +99,7 @@ export const languageCodesArr = [
   'sl',
 ] as const
 ```
+
+## Thanks
+
+[pot-app](https://github.com/pot-app/pot-desktop)

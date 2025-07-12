@@ -2,7 +2,13 @@ import type { Settings } from '../settings'
 import type { LanguagesMap } from './language'
 import { type AxiosInstance, isAxiosError } from 'axios'
 
-export async function translate(text: string, from: string, to: string, axiosInstance: AxiosInstance, _options: Settings): Promise<string> {
+export async function translate(
+  text: string,
+  from: string,
+  to: string,
+  axiosInstance: AxiosInstance,
+  _options: Settings,
+): Promise<string> {
   const deeplxUrl = _options.deeplxUrl
   try {
     const response = await axiosInstance.post(

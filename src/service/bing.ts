@@ -5,7 +5,13 @@ import { type AxiosInstance, isAxiosError } from 'axios'
 const tokenApi = 'https://edge.microsoft.com/translate/auth'
 const translateApi = 'https://api-edge.cognitive.microsofttranslator.com/translate'
 
-export async function translate(text: string, from: string, to: string, axiosInstance: AxiosInstance, _options: Settings): Promise<string> {
+export async function translate(
+  text: string,
+  from: string,
+  to: string,
+  axiosInstance: AxiosInstance,
+  _options: Settings,
+): Promise<string> {
   try {
     const tokenResponse = await axiosInstance.get(
       tokenApi,

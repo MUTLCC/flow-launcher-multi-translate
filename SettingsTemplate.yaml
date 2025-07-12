@@ -7,10 +7,10 @@ body:
       description: >
         Translation services, one per line.
 
-        Free services: Youdao, Google, Bing, Deeplx
+        Supported services: Youdao, Google, Bing, Deepl, DeepLX.
 
         (DeepLX requires self-hosted URL)
-      defaultValue: "youdao\ngoogle\nbing"
+      defaultValue: "youdao\ndeepl\ngoogle\nbing"
 
   - type: input
     attributes:

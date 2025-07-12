@@ -6,7 +6,13 @@ import * as crypto from 'node:crypto'
 import { isAxiosError } from 'axios'
 import { getRandomInt } from '../utils'
 
-export async function translate(text: string, from: string, to: string, axiosInstance: AxiosInstance, _options: Settings): Promise<string> {
+export async function translate(
+  text: string,
+  from: string,
+  to: string,
+  axiosInstance: AxiosInstance,
+  _options: Settings,
+): Promise<string> {
   const client = createHttpClient(axiosInstance)
   try {
     // get secret key

@@ -4,7 +4,13 @@ import { type AxiosInstance, isAxiosError } from 'axios'
 
 const api = 'https://translate.google.com/translate_a/single?dt=at&dt=bd&dt=ex&dt=ld&dt=md&dt=qca&dt=rw&dt=rm&dt=ss&dt=t'
 
-export async function translate(text: string, from: string, to: string, axiosInstance: AxiosInstance, _options: Settings): Promise<string> {
+export async function translate(
+  text: string,
+  from: string,
+  to: string,
+  axiosInstance: AxiosInstance,
+  _options: Settings,
+): Promise<string> {
   try {
     const response = await axiosInstance.get(
       api,
