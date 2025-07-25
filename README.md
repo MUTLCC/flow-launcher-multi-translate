@@ -28,6 +28,7 @@ A Flow-Launcher plugin that translates text using multiple translation services.
 
 ### Requires configuration
 - DeepLX (need personal URL)
+- [MTranServer](https://github.com/xxnuo/MTranServer) (need personal URL and token)
 
 ## Features
 
@@ -54,6 +55,21 @@ Just wait for the translation results, and select one of them to copy into the c
 ## Configuration
 
 See Flow-Launcher plugin settings page.
+
+### Service Configs
+
++ DeepLX: Set your DeepLX URL.
+
+```ini
+DEEPLX_URL=YOUR_DEEPLX_URL
+```
+
++ MTranServer: Set your MTranServer URL and token.
+
+```ini
+MTRAN_SERVER_URL=YOUR_MTRAN_SERVER_URL
+MTRAN_SERVER_TOKEN=YOUR_MTRAN_SERVER_TOKEN
+```
 
 ## Language Codes List
 
@@ -83,6 +99,7 @@ export const languageCodesArr = [
   'ms',
   'ar',
   'hi',
+  'ml',
   'mn_cy',
   'mn_mo',
   'km',
