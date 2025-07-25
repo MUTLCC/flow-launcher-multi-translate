@@ -1,6 +1,7 @@
+import type { AxiosInstance } from 'axios'
 import type { Settings } from '../settings'
 import type { LanguagesMap } from './language'
-import { type AxiosInstance, isAxiosError } from 'axios'
+import { formatError } from '../utils'
 
 const tokenApi = 'https://edge.microsoft.com/translate/auth'
 const translateApi = 'https://api-edge.cognitive.microsofttranslator.com/translate'
@@ -53,10 +54,7 @@ export async function translate(
     return JSON.stringify(data)
   }
   catch (error) {
-    if (isAxiosError(error) && error.response) {
-      return `${JSON.stringify(error)}\n${error.response.data}`
-    }
-    return JSON.stringify(error)
+    return formatError(error)
   }
 }
 

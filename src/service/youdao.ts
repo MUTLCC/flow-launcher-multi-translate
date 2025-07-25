@@ -3,8 +3,7 @@ import type { Buffer } from 'node:buffer'
 import type { Settings } from '../settings'
 import type { LanguagesMap } from './language'
 import * as crypto from 'node:crypto'
-import { isAxiosError } from 'axios'
-import { getRandomInt } from '../utils'
+import { formatError, getRandomInt } from '../utils'
 
 export async function translate(
   text: string,
@@ -49,10 +48,7 @@ export async function translate(
     return result
   }
   catch (error) {
-    if (isAxiosError(error) && error.response) {
-      return `${JSON.stringify(error)}\n${error.response.data}`
-    }
-    return JSON.stringify(error)
+    return formatError(error)
   }
 }
 

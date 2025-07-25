@@ -3,8 +3,6 @@ import type { Settings } from '../settings'
 import type { LanguagesMap } from './language'
 import { formatError } from '../utils'
 
-const api = 'https://translate.google.com/translate_a/single?dt=at&dt=bd&dt=ex&dt=ld&dt=md&dt=qca&dt=rw&dt=rm&dt=ss&dt=t'
-
 export async function translate(
   text: string,
   from: string,
@@ -12,50 +10,43 @@ export async function translate(
   axiosInstance: AxiosInstance,
   _options: Settings,
 ): Promise<string> {
+  const url = _options.mTranServer.url.endsWith('/')
+    ? `${_options.mTranServer.url}translate`
+    : `${_options.mTranServer.url}/translate`
+
+  const token = _options.mTranServer.token
+
   try {
-    const response = await axiosInstance.get(
-      api,
+    const response = await axiosInstance.post(
+      url,
       {
-        params: {
-          q: text,
-          sl: from,
-          tl: to,
-          hl: to,
-          client: 'gtx',
-          ie: 'UTF-8',
-          oe: 'UTF-8',
-          otf: '1',
-          ssel: '0',
-          tsel: '0',
-          kc: '7',
-        },
+        text,
+        from,
+        to,
+      },
+      {
         headers: {
           'Content-Type': 'application/json',
+          // 'Authorization': `${token}`,
         },
+        params: token !== '' ? { token } : undefined,
       },
     )
 
-    const data = response.data
-    let result = ''
-    for (const centence of data[0]) {
-      result += centence[0] || ''
-    }
-
-    return result
+    return response.data.result
   }
   catch (error) {
     return formatError(error)
   }
 }
 
-// https://cloud.google.com/translate/docs/languages?hl=zh-cn
+// api/languages
 export const languagesMap: LanguagesMap = {
   auto: 'auto',
   zh: 'zh-CN',
-  zh_hant: 'zh-TW',
-  yue: 'yue',
-  ja: 'ja',
+  zh_hant: 'zh-Hant',
   en: 'en',
+  ja: 'ja',
   ko: 'ko',
   fr: 'fr',
   es: 'es',
@@ -68,17 +59,27 @@ export const languagesMap: LanguagesMap = {
   vi: 'vi',
   id: 'id',
   th: 'th',
+  ml: 'ml',
   ms: 'ms',
   ar: 'ar',
   hi: 'hi',
-  mn_cy: 'mn',
   km: 'km',
-  nb_no: 'nob',
-  nn_no: 'nno',
   fa: 'fa',
   sv: 'sv',
   pl: 'pl',
   nl: 'nl',
   uk: 'uk',
   he: 'he',
+  bg: 'bg',
+  cs: 'cs',
+  da: 'da',
+  et: 'et',
+  fi: 'fi',
+  el: 'el',
+  hu: 'hu',
+  lv: 'lv',
+  lt: 'lt',
+  ro: 'ro',
+  sk: 'sk',
+  sl: 'sl',
 }

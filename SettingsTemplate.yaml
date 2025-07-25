@@ -20,21 +20,33 @@ body:
 
         Supported services:
 
+        Without configuration:
+
         Youdao, Google, Baidu, Bing, DeepL, DeepLX
 
         Tencent, Transmart, Caiyun, Volcegine
 
-        (DeepLX requires self-hosted URL)
+        Requires configuration:
+
+        DeepLX, MTranServer
+
       defaultValue: "youdao\ndeepl\ngoogle\nbing"
 
-  - type: input
+  - type: textarea
     attributes:
-      name: deeplxUrl
-      label: DeepLX URL
+      name: serviceConfigs
+      label: Service Configs
       description: >
-        DeepLX service URL.
+        Config services that require configuration
 
-        Required only when using DeepLX.
+        e.g. DeepLX, MTranServer
+
+        DEEPLX_URL=xxxx
+
+        MTRANSERVER_URL=xxxx
+
+        MTRANSERVER_TOKEN=xxxx
+
       defaultValue: ''
 
   - type: input

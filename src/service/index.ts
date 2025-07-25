@@ -6,6 +6,7 @@ import * as caiyun from './caiyun'
 import * as deepl from './deepl'
 import * as deeplx from './deeplx'
 import * as google from './google'
+import * as mtranserver from './MTranServer'
 import * as tencent from './tencent'
 import * as transmart from './transmart'
 import * as volcengine from './volcengine'
@@ -18,6 +19,7 @@ const serviceModules = {
   deepl,
   deeplx,
   google,
+  mtranserver,
   tencent,
   transmart,
   volcengine,
@@ -31,6 +33,7 @@ export const serviceNamesMap: Record<string, { en: string, zh: string }> = {
   deepl: { en: 'DeepL', zh: 'DeepL' },
   deeplx: { en: 'DeepLX', zh: 'DeepLX' },
   google: { en: 'Google Translate', zh: '谷歌翻译' },
+  mtranserver: { en: 'MTranServer', zh: 'MTranServer' },
   tencent: { en: 'Tencent Translate', zh: '腾讯翻译君' },
   transmart: { en: 'Transmart', zh: '腾讯交互翻译' },
   volcengine: { en: 'Volcengine Translate', zh: '火山翻译' },

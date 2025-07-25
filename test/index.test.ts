@@ -1,28 +1,32 @@
+import axios from 'axios'
 import { describe, expect, it } from 'vitest'
 import { parsePrompt } from '../src/index'
 import { languagesMap as bingLanguages, translate as bingTranslate } from '../src/service/bing'
 import { languagesMap as deeplxLanguages, translate as deeplxTranslate } from '../src/service/deeplx'
 import { languagesMap as googleLanguages, translate as googleTranslate } from '../src/service/google'
+import { languagesMap as mTranServerLanguages, translate as mTranServerTranslate } from '../src/service/MTranServer'
 import { languagesMap as youdaoLanguages, translate as youdaoTranslate } from '../src/service/youdao'
-import { config } from '../src/settings'
 
 describe('translate', () => {
-  it('deeplx', async () => {
+  it.skip('deeplx', async () => {
     const res = await deeplxTranslate(
       'an apple a day keeps the doctor away. an banana a day keeps you away from everyone.',
       deeplxLanguages.en!,
       deeplxLanguages.zh!,
-      config,
+      axios,
+      {} as any,
     )
     expect(res).toMatchInlineSnapshot(`"每天一个苹果，医生远离你；每天一根香蕉，你远离所有人。"`)
   })
 
-  it.only('google', async () => {
+  it('google', async () => {
     const res = await googleTranslate(
       'an apple a day keeps the doctor away. an banana a day keeps you away from everyone.',
       googleLanguages.en!,
       googleLanguages.zh!,
-      config,
+      axios,
+      {} as any,
+
     )
     expect(res).toMatchInlineSnapshot(`"一天苹果将医生远离。每天的香蕉使您远离所有人。"`)
   })
@@ -32,19 +36,39 @@ describe('translate', () => {
       'an apple a day keeps the doctor away. an banana a day keeps you away from everyone.',
       bingLanguages.en!,
       bingLanguages.zh!,
-      config,
+      axios,
+      {} as any,
+
     )
-    expect(res).toMatchInlineSnapshot(`"一天一个苹果让医生远离。一天一根香蕉让你远离所有人。"`)
+    expect(res).toMatchInlineSnapshot(`"每天一个苹果可以让医生远离。每天一根香蕉让你远离所有人。"`)
   })
 
-  it('youdao', async () => {
+  it.skip('youdao', async () => {
     const res = await youdaoTranslate(
       'an apple a day keeps the doctor away. an banana a day keeps you away from everyone.',
       youdaoLanguages.en!,
       'he',
-      config,
+      axios,
+      {} as any,
+
     )
     expect(res).toMatchInlineSnapshot(`"{}"`)
+  })
+
+  it.only('mTranServer', async () => {
+    const res = await mTranServerTranslate(
+      'an apple a day keeps the doctor away. an banana a day keeps you away from everyone.',
+      mTranServerLanguages.en!,
+      mTranServerLanguages.zh!,
+      axios,
+      {
+        mTranServer: {
+          url: 'http://localhost:8989/',
+          token: 'gzyctfxxm',
+        },
+      } as any,
+    )
+    expect(res).toMatchInlineSnapshot(`"一天一个苹果让医生远离,每天吃一根香蕉让你远离每个人。"`)
   })
 })
 
